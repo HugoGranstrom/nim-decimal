@@ -9,6 +9,7 @@ import decimal_lowlevel
 
 type 
     DecimalType = ref[ptr mpd_t]
+    DecimalError = object of Exception
 
 const
     DEFAULT_PREC = MPD_RDIGITS * 2
@@ -23,80 +24,101 @@ proc setPrec*(prec: int) =
     if 0 < prec:
         let success = mpd_qsetprec(CTX_ADDR, prec)
         if success == 0:
-            echo "Bad prec" 
+            raise newException(DecimalError, "Couldn't set precision")
 
-proc `$`*(s: DecimalType): cstring = mpd_to_sci(s, 0)
+proc `$`*(s: DecimalType): cstring = mpd_to_sci(s[], 0)
 
-proc newDecimal*(): DecimalType = mpd_new(CTX_ADDR)
+proc newDecimal*(): DecimalType = 
+    new[ptr mpd_t](result)
+    result[] = mpd_qnew()
 
 proc newDecimal*(s: string): DecimalType =
-    result = mpd_new(CTX_ADDR)
-    mpd_set_string(result, s, CTX_ADDR)
+    new[ptr mpd_t](result)
+    result[] = mpd_qnew()
+    mpd_set_string(result[], s, CTX_ADDR)
 
 proc newDecimal*(s: int64): DecimalType =
-    result = mpd_new(CTX_ADDR)
-    mpd_set_i64(result, s, CTX_ADDR)
+    new[ptr mpd_t](result)
+    result[] = mpd_qnew()
+    mpd_set_i64(result[], s, CTX_ADDR)
 
 proc newDecimal*(s: int32): DecimalType =
-    result = mpd_new(CTX_ADDR)
-    mpd_set_i32(result, s, CTX_ADDR)
+    result[] = mpd_qnew()
+    mpd_set_i32(result[], s, CTX_ADDR)
 
 proc clone*(b: DecimalType): DecimalType =
     result = newDecimal()
-    mpd_copy(result, b, CTX_ADDR)
+    var status: uint32
+    let success = mpd_qcopy(result[], b[], addr status)
+    if success == 0:
+        raise newException(DecimalError, "Decimal failed to copy")
 
 proc `+`*(a, b: DecimalType): DecimalType =
+    var status: uint32
     result = newDecimal()
-    mpd_add(result, a, b, CTX_ADDR)
+    mpd_qadd(result[], a[], b[], CTX_ADDR, addr status)
 
 proc `+=`*(a, b: DecimalType) =
-    mpd_add(a, a, b, CTX_ADDR)
+    var status: uint32
+    mpd_qadd(a[], a[], b[], CTX_ADDR, addr status)
 
 proc `-`*(a, b: DecimalType): DecimalType =
+    var status: uint32
     result = newDecimal()
-    mpd_sub(result, a, b, CTX_ADDR)
+    mpd_qsub(result[], a[], b[], CTX_ADDR, addr status)
 
 proc `-=`*(a, b: DecimalType) =
-    mpd_sub(a, a, b, CTX_ADDR)
+    var status: uint32
+    mpd_qsub(a[], a[], b[], CTX_ADDR, addr status)
 
 proc `*`*(a, b: DecimalType): DecimalType =
+    var status: uint32
     result = newDecimal()
-    mpd_mul(result, a, b, CTX_ADDR)
+    mpd_qmul(result[], a[], b[], CTX_ADDR, addr status)
 
 proc `*=`*(a, b: DecimalType) =
-    mpd_mul(a, a, b, CTX_ADDR)
+    var status: uint32
+    mpd_qmul(a[], a[], b[], CTX_ADDR, addr status)
 
 proc `/`*(a, b: DecimalType): DecimalType =
+    var status: uint32
     result = newDecimal()
-    mpd_div(result, a, b, CTX_ADDR)
+    mpd_qdiv(result[], a[], b[], CTX_ADDR, addr status)
 
 proc `/=`*(a, b: DecimalType) =
-    mpd_div(a, a, b, CTX_ADDR)
+    var status: uint32
+    mpd_qdiv(a[], a[], b[], CTX_ADDR, addr status)
 
 proc `^`*(a, b: DecimalType): DecimalType =
+    var status: uint32
     result = newDecimal()
-    mpd_pow(result, a, b, CTX_ADDR)
+    mpd_qpow(result[], a[], b[], CTX_ADDR, addr status)
 
 proc divint*(a, b: DecimalType): DecimalType =
+    var status: uint32
     result = newDecimal()
-    mpd_divint(result, a, b, CTX_ADDR)
+    mpd_qdivint(result[], a[], b[], CTX_ADDR, addr status)
 
 proc `//`*(a, b: DecimalType): DecimalType =
+    var status: uint32
     result = newDecimal()
-    mpd_divint(result, a, b, CTX_ADDR)
+    mpd_qdivint(result[], a[], b[], CTX_ADDR, addr status)
 
 proc rem*(a, b: DecimalType): DecimalType =
+    var status: uint32
     result = newDecimal()
-    mpd_rem(result, a, b, CTX_ADDR)
+    mpd_qrem(result[], a[], b[], CTX_ADDR, addr status)
 
 proc divmod*(a, b: DecimalType): (DecimalType, DecimalType) =
-    let q = newDecimal()
-    let r = newDecimal()
-    mpd_divmod(q, r, a, b, CTX_ADDR)
+    var status: uint32
+    var q = newDecimal()
+    var r = newDecimal()
+    mpd_qdivmod(q[], r[], a[], b[], CTX_ADDR, addr status)
     result = (q, r)
 
 
 proc exp*(a: DecimalType): DecimalType =
+    var status: uint32
     result = newDecimal()
-    mpd_exp(result, a, CTX_ADDR)
+    mpd_qexp(result[], a[], CTX_ADDR, addr status)
 
