@@ -27,7 +27,7 @@ proc setPrec*(prec: int) =
 
 proc `$`*(s: DecimalType): cstring = mpd_to_sci(s, 0)
 
-proc initDecimal*(): DecimalType = mpd_new(CTX_ADDR)
+proc newDecimal*(): DecimalType = mpd_new(CTX_ADDR)
 
 proc newDecimal*(s: string): DecimalType =
     result = mpd_new(CTX_ADDR)
@@ -42,57 +42,57 @@ proc newDecimal*(s: int32): DecimalType =
     mpd_set_i32(result, s, CTX_ADDR)
 
 proc clone*(b: DecimalType): DecimalType =
-    result = initDecimal()
+    result = newDecimal()
     mpd_copy(result, b, CTX_ADDR)
 
 proc `+`*(a, b: DecimalType): DecimalType =
-    result = initDecimal()
+    result = newDecimal()
     mpd_add(result, a, b, CTX_ADDR)
 
 proc `+=`*(a, b: DecimalType) =
     mpd_add(a, a, b, CTX_ADDR)
 
 proc `-`*(a, b: DecimalType): DecimalType =
-    result = initDecimal()
+    result = newDecimal()
     mpd_sub(result, a, b, CTX_ADDR)
 
 proc `-=`*(a, b: DecimalType) =
     mpd_sub(a, a, b, CTX_ADDR)
 
 proc `*`*(a, b: DecimalType): DecimalType =
-    result = initDecimal()
+    result = newDecimal()
     mpd_mul(result, a, b, CTX_ADDR)
 
 proc `*=`*(a, b: DecimalType) =
     mpd_mul(a, a, b, CTX_ADDR)
 
 proc `/`*(a, b: DecimalType): DecimalType =
-    result = initDecimal()
+    result = newDecimal()
     mpd_div(result, a, b, CTX_ADDR)
 
 proc `/=`*(a, b: DecimalType) =
     mpd_div(a, a, b, CTX_ADDR)
 
 proc `^`*(a, b: DecimalType): DecimalType =
-    result = initDecimal()
+    result = newDecimal()
     mpd_pow(result, a, b, CTX_ADDR)
 
 proc divint*(a, b: DecimalType): DecimalType =
-    result = initDecimal()
+    result = newDecimal()
     mpd_divint(result, a, b, CTX_ADDR)
 
 proc rem*(a, b: DecimalType): DecimalType =
-    result = initDecimal()
+    result = newDecimal()
     mpd_rem(result, a, b, CTX_ADDR)
 
 proc divmod*(a, b: DecimalType): (DecimalType, DecimalType) =
-    let q = initDecimal()
-    let r = initDecimal()
+    let q = newDecimal()
+    let r = newDecimal()
     mpd_divmod(q, r, a, b, CTX_ADDR)
     result = (q, r)
 
 
 proc exp*(a: DecimalType): DecimalType =
-    result = initDecimal()
+    result = newDecimal()
     mpd_exp(result, a, CTX_ADDR)
 
