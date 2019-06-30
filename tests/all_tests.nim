@@ -9,6 +9,8 @@ import  unittest,
         ../decimal/decimal
 
 suite "Basic Arithmetic":
+  test "init Decimal":
+    var d = newDecimal()
   test "Set Decimal from string":
     let s = "1.23456"
     var d = newDecimal(s)
