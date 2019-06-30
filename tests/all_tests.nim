@@ -8,6 +8,37 @@
 import  unittest,
         ../decimal/decimal
 
-suite "Mock compile test":
-  test "Nim-decimal and its wrapped library compiles":
-    discard
+suite "Basic Arithmetic":
+  test "Set Decimal from string":
+    let s = "1.23456"
+    var d = newDecimal(s)
+    check $d == s
+  test "Set Decimal from int":
+    let s = 123456
+    var d = newDecimal(s)
+    let correct = "123456"
+    check $d == correct
+  test "Decimal Addition":
+    var a = newDecimal("1.2")
+    var b = newDecimal("3.5")
+    var c = a + b
+    let correct = "4.7"
+    check $c == correct
+  test "Decimal Subtraction":
+    var a = newDecimal("1.2")
+    var b = newDecimal("3.5")
+    var c = a - b
+    let correct = "-2.3"
+    check $c == correct
+  test "Decimal Multiplication":
+    var a = newDecimal("1.2")
+    var b = newDecimal("3.5")
+    var c = a * b
+    let correct = "4.20"
+    check $c == correct
+  test "Decimal Division":
+    var a = newDecimal("6.25")
+    var b = newDecimal("2.5")
+    var c = a / b
+    let correct = "2.5"
+    check $c == correct
