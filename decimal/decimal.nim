@@ -8,7 +8,7 @@
 import decimal_lowlevel
 
 type 
-    DecimalType = ptr mpd_t
+    DecimalType = ref[ptr mpd_t]
 
 const
     DEFAULT_PREC = MPD_RDIGITS * 2
@@ -78,6 +78,10 @@ proc `^`*(a, b: DecimalType): DecimalType =
     mpd_pow(result, a, b, CTX_ADDR)
 
 proc divint*(a, b: DecimalType): DecimalType =
+    result = newDecimal()
+    mpd_divint(result, a, b, CTX_ADDR)
+
+proc `//`*(a, b: DecimalType): DecimalType =
     result = newDecimal()
     mpd_divint(result, a, b, CTX_ADDR)
 
