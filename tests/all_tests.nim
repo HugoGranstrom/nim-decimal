@@ -44,3 +44,34 @@ suite "Basic Arithmetic":
     var c = a / b
     let correct = "2.5"
     check $c == correct
+  test "Decimal Power 1":
+    var a = newDecimal("2.5")
+    var b = newDecimal("2")
+    var c = a ^ b
+    check $c == "6.25"
+  test "Decimal Power 2":
+    var a = newDecimal("81")
+    var b = newDecimal("0.5")
+    var c = a ^ b
+    check $c == "9.0000000000000000000000000000000000000"
+  test "Decimal divint":
+    let a = newDecimal("11")
+    let b = newDecimal("3")
+    let c = a // b
+    check $c == "3"
+  test "Decimal rem":
+    let a = newDecimal("11")
+    let b = newDecimal("3")
+    let c = rem(a, b)
+    check $c == "2"
+  test "Decimal divmod":
+    let a = newDecimal("11")
+    let b = newDecimal("3")
+    let (q, r) = divmod(a, b)
+    check $q == "3"
+    check $r == "2"
+  test "Decimal exp":
+    let a = newDecimal("2")
+    let c = exp(a)
+    check $c == "7.3890560989306502272304274605750078132"
+
