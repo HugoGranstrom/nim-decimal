@@ -4,11 +4,11 @@
 #   * MIT license (license terms in the root directory or at http://opensource.org/licenses/MIT).
 #   * Apache v2 license (license terms in the root directory or at http://www.apache.org/licenses/LICENSE-2.0).
 # at your option. This file may not be copied, modified, or distributed except according to those terms.
-
-import strutils, macros, ospaths
+import os
+import strutils, macros
 from os import DirSep, walkFiles
 
-const cSourcesPath = currentSourcePath.rsplit(DirSep, 1)[0] & "/mpdecimal_wrapper/generated"
+const cSourcesPath = currentSourcePath.rsplit(DirSep, 1)[0] & "/../mpdecimal_wrapper/generated"
 const cHeader = csourcesPath / "mpdecimal.h"
 
 {.passC: "-I" & cSourcesPath .}
@@ -56,7 +56,7 @@ macro compileFilesFromDir(path: static[string], fileNameBody: untyped): untyped 
     )
 
 # Order is important
-compileFilesFromDir("mpdecimal_wrapper/generated/"):
+compileFilesFromDir("/../mpdecimal_wrapper/generated/"):
   "basearith.c"
   "context.c"
   "constants.c"
