@@ -1,4 +1,4 @@
-packageName   = "decimal"
+packageName   = "Decimal"
 version       = "0.0.1"
 author        = "Status Research & Development GmbH"
 description   = "A correctly-rounded arbitrary precision decimal floating point arithmetic library"
