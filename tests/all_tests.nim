@@ -20,12 +20,36 @@ suite "Basic Arithmetic":
     var d = newDecimal(s)
     let correct = "123456"
     check $d == correct
+
   test "Decimal Addition":
     var a = newDecimal("1.2")
     var b = newDecimal("3.5")
-    var c = a + b
+    var c1 = a + b
+    var c2 = b + a
     let correct = "4.7"
-    check $c == correct
+    check $c1 == correct
+    check $c2 == correct
+  test "Decimal inplace Addition":
+    var a = newDecimal("1.2")
+    var b = newDecimal("3.6")
+    a += b
+    let correct = "4.8"
+    check $a == correct
+  test "Decimal-Int Addition":
+    var a = newDecimal("1.2")
+    var b = 5
+    var c1 = a + b
+    var c2 = b + a
+    let correct = "6.2"
+    check $c1 == correct
+    check $c2 == correct
+  test "Decimal-Int inplace Addition":
+    var a = newDecimal("1.2")
+    var b = 4
+    a += b
+    let correct = "5.2"
+    check $a == correct
+
   test "Decimal Subtraction":
     var a = newDecimal("1.2")
     var b = newDecimal("3.5")
@@ -38,12 +62,35 @@ suite "Basic Arithmetic":
     var c = a * b
     let correct = "4.20"
     check $c == correct
+
   test "Decimal Division":
     var a = newDecimal("6.25")
     var b = newDecimal("2.5")
     var c = a / b
     let correct = "2.5"
     check $c == correct
+  test "Decimal-Int Division":
+    var a = newDecimal("10")
+    var b = 5
+    var c = a / b
+    let correct = "2"
+    check $c == correct
+
+  test "Decimal ==":
+    var a = newDecimal("6.25")
+    var b = newDecimal("2.5")
+    check a == a
+    check (a == b)  == false
+  test "Decimal <":
+    var a = newDecimal("6.25")
+    var b = newDecimal("2.5")
+    check b < a
+    check (a < b) == false
+  test "Decimal >":
+    var a = newDecimal("6.25")
+    var b = newDecimal("2.5")
+    check a > b
+    check (b > a) == false
   test "Decimal Power 1":
     var a = newDecimal("2.5")
     var b = newDecimal("2")
@@ -74,4 +121,5 @@ suite "Basic Arithmetic":
     let a = newDecimal("2")
     let c = exp(a)
     check $c == "7.3890560989306502272304274605750078132"
+
 
