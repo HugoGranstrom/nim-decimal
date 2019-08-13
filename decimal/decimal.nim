@@ -42,17 +42,14 @@ proc newDecimal*(s: string): DecimalType =
     result[] = mpd_qnew()
     mpd_set_string(result[], s, CTX_ADDR)
 
-proc newDecimal*(s: int64): DecimalType =
+proc newDecimal*(s: int): DecimalType =
     ## Create a new DecimalType from a int64
     new result
     result[] = mpd_qnew()
-    mpd_set_i64(result[], s, CTX_ADDR)
-
-proc newDecimal*(s: int32): DecimalType =
-    ## Create a new DecimalType from a int32
-    new result
-    result[] = mpd_qnew()
-    mpd_set_i32(result[], s, CTX_ADDR)
+    when (sizeof(int) == 8):
+        mpd_set_i64(result[], s, CTX_ADDR)
+    else:
+        mpd_set_i32(result[], s, CTX_ADDR)
 
 proc clone*(b: DecimalType): DecimalType =
     ## Clone a DecimalType and returns a new independent one
