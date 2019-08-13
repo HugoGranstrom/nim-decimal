@@ -406,3 +406,51 @@ proc powmod*(base, exp, modulus: DecimalType): DecimalType =
     var status: uint32
     result = newDecimal()
     mpd_qpowmod(result[], base[], exp[], modulus[], CTX_ADDR, addr status)
+
+proc finalize*(a: DecimalType) =
+    ## Apply the current context to a
+    var status: uint32
+    mpd_qfinalize(a[], CTX_ADDR, addr status)
+
+proc shift*(a, b: DecimalType): DecimalType =
+    ## Return a shifted by b places. b must be in the range [-prec, prec]. A negative b indicates a right shift, a positive b a left shift. Digits that do not fit are discarded.
+    var status: uint32
+    result = newDecimal()
+    mpd_qshift(result[], a[], b[], CTX_ADDR, addr status)
+
+proc shift*(a: DecimalType, b: mpd_ssize_t): DecimalType =
+    ## Like shift, only that the number of places is specified by a integer type rather than a DecimalType
+    var status: uint32
+    result = newDecimal()
+    mpd_qshiftn(result[], a[], b, CTX_ADDR, addr status)
+
+proc rotate*(a, b: DecimalType): DecimalType =
+    ## Return a rotated by b places. b must be in the range [-prec, prec]. A negative b indicates a right rotation, a positive b a left rotation.
+    var status: uint32
+    result = newDecimal()
+    mpd_qrotate(result[], a[], b[], CTX_ADDR, addr status)
+
+proc elementwiseAnd*(a, b: DecimalType): DecimalType =
+    ## Return the digit-wise logical and of a and b
+    var status: uint32
+    result = newDecimal()
+    mpd_qand(result[], a[], b[], CTX_ADDR, addr status)
+
+proc elementwiseOr*(a, b: DecimalType): DecimalType =
+    ## Return  the digit-wise logical or of a and b
+    var status: uint32
+    result = newDecimal()
+    mpd_qor(result[], a[], b[], CTX_ADDR, addr status)
+
+proc elementwiseXor*(a, b: DecimalType): DecimalType =
+    ## Return the digit-wise logical xor of a and b
+    var status: uint32
+    result = newDecimal()
+    mpd_qxor(result[], a[], b[], CTX_ADDR, addr status)
+
+proc elementwiseInvert*(a: DecimalType): DecimalType =
+    ## Return the digit-wise logical inversion of a
+    var status: uint32
+    result = newDecimal()
+    mpd_qinvert(result[], a[], CTX_ADDR, addr status)
+
